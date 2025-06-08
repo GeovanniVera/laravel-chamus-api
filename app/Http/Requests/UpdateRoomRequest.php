@@ -22,7 +22,7 @@ class UpdateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100|unique:rooms,name,except,'.$this->route('room')->id,
+            'name' => 'required|string|max:100|',
             'museum_id' => 'required|exists:museums,id|numeric',
             'description' => 'required|string',
             'image' => 'nullable'
@@ -35,7 +35,6 @@ class UpdateRoomRequest extends FormRequest
             'name.required' => 'El nombre del museo es obligatorio.',
             'name.string' => 'El nombre de la sala debe ser una cadena de texto.',
             'name.max' => 'El nombre de la sala no puede exceder los 100 caracteres',
-            'name.unique' => 'El nombre de la sala ya existe.',
             'museum_id.required' => 'El Museo es obligatorio.',
             'museum_id.exists' => 'El museo seleccionado no existe',
             'museum_id.numeric' => 'El museo no es valido.',

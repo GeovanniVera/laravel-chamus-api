@@ -52,7 +52,7 @@ class RoomController extends Controller implements HasMiddleware
      */
     public function update(UpdateRoomRequest $request, Room $room)
     {
-        $room->update($request->only(['name', 'museum_id', 'description', 'image']));
+        $room->update($request->only(['name', 'image', 'description', 'museum_id']));
         return response()->json(RoomResource::make($room), 201);
     }
 
