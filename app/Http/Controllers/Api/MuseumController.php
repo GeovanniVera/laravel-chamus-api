@@ -50,7 +50,17 @@ class MuseumController extends Controller implements HasMiddleware
     public function update(UpadateMuseumRequest $request, Museum $museum)
     {
         Gate::authorize('update', $museum);
-        $museum->update($request->only(['name', 'image']));
+        $data = $request->validated();
+        if(request()->hasFile('image')){
+            //Delete the old image if exists
+            if($museum->image){
+                Storage::disk('public')->delete($museum->image);
+            }
+            $data['image'] = Storage::disk('public')->put('museums',request()->file('image'));
+        }else{
+            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image' ;
+        }
+        $museum->update($data);
         return response()->json(MuseumResource::make($museum), 200);
     }
 
