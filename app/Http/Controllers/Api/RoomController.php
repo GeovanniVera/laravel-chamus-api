@@ -10,6 +10,7 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller implements HasMiddleware
 {
@@ -35,7 +36,13 @@ class RoomController extends Controller implements HasMiddleware
      */
     public function store(StoreRoomRequest $request)
     {
-        $room = Room::create($request->validated());
+        $data = $request->validated();
+        if(request()->hasFile('image')){
+            $data['image'] = Storage::disk('public')->put('rooms',request()->file('image'));
+        }else{
+            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image' ;
+        }
+        $room = Room::create($data);
         return response()->json(RoomResource::make($room), 201);
     }
 

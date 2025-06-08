@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class RoomResource extends JsonResource
 {
@@ -17,11 +18,12 @@ class RoomResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->name,
-            'imagen' => $this->image,
+            'imagen' => Storage::url($this->image),
             'descripcion' => $this->description,
-            'museo' =>MuseumResource::make($this->whenLoaded('museum')),
             'creado' => $this->created_at,
-            'actualizado' => $this->updated_at
+            'actualizado' => $this->updated_at,
+            'museo' =>MuseumResource::make($this->whenLoaded('museum')),
+            
         ];
     }
 }

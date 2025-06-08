@@ -32,7 +32,7 @@ class StoreMuseumRequest extends FormRequest
             'description' => 'required|string',
             'number_of_rooms' => 'integer|min:1',
             'status' => 'in:active,inactive',
-            'image' => 'nullable'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ];
     }
 

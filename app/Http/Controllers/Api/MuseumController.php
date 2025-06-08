@@ -10,6 +10,7 @@ use App\Http\Requests\UpadateMuseumRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class MuseumController extends Controller implements HasMiddleware
 {
@@ -36,6 +37,11 @@ class MuseumController extends Controller implements HasMiddleware
     public function store(StoreMuseumRequest $request)
     {
         $data = $request->validated();
+        if(request()->hasFile('image')){
+            $data['image'] = Storage::disk('public')->put('museums',request()->file('image'));
+        }else{
+            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image' ;
+        }
         $data['user_id'] = auth('api')->id();
         $museum = Museum::create($data);
         return response()->json($museum, 201);

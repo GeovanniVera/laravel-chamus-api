@@ -19,15 +19,18 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Vera',
-            'email' => 'geovanni@example.com',
+            'email' => 'geovanni.vera23@gmail.com',
         ]);
 
-        Museum::factory(10)->create([
-            'status' => 'active',
+        User::factory()->create([
+            'name' => 'Demian',
+            'email' => 'obeddemian@gmail.com',
         ]);
 
-        Room::factory(50)->create();
-
+        User::factory()->create([
+            'name' => 'Tapia',
+            'email' => 'josetapia121205@gmail.com',
+        ]);
 
     }
 }

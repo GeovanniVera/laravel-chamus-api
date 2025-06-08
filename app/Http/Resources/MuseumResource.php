@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class MuseumResource extends JsonResource
 {
@@ -17,7 +18,7 @@ class MuseumResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->name,
-            'imagen' => $this->image,
+            'imagen' => Storage::url($this->image),
             'hora_de_apertura' => $this->opening_time,
             'hora_de_cierre' => $this->clossing_time,
             'latitud' => $this->latitude,

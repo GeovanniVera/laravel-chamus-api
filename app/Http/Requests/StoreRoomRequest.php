@@ -25,7 +25,8 @@ class StoreRoomRequest extends FormRequest
             'name' => 'required|string|max:100|unique:rooms,name',
             'museum_id' => 'required|exists:museums,id|numeric',
             'description' => 'required|string',
-            'image' => 'nullable'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+
 
         ];
     }
