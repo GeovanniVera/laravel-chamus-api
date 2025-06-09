@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\MuseumController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\DiscontController;
+use App\Http\Controllers\Api\DiscountController;
 use App\Models\Discount;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::apiResource('rooms', RoomController::class);
-Route::apiResource('posts', PostController::class);
+// Route::apiResource('posts', PostController::class);
 Route::apiResource('museums', MuseumController::class);
 Route::apiResource('categories',CategoryController::class);
-Route::apiResource('discounts',DiscontController::class);
+Route::apiResource('discounts',DiscountController::class);
