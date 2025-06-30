@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class MuseumController extends Controller implements HasMiddleware
 {
 
-    public static function middleware() 
+    public static function middleware()
     {
        return [
             new Middleware('auth:sanctum', except: ['index', 'show']),
@@ -31,11 +31,13 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function show(Museum $museum)
     {
+         $museum->load('rooms');
         return response()->json(MuseumResource::make($museum), 200);
     }
 
     public function store(StoreMuseumRequest $request)
     {
+
         $data = $request->validated();
         if(request()->hasFile('image')){
             $data['image'] = Storage::disk('public')->put('museums',request()->file('image'));

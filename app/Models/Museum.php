@@ -26,7 +26,7 @@ class Museum extends Model
         'status'
     ];
 
-    protected $casts = [ 
+    protected $casts = [
         'user_id' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
@@ -40,7 +40,7 @@ class Museum extends Model
      * for example: a museum belongs to user,
      * for example: a museum belongs to many categories
      * for example: a museum has belongs to many discounts
-     * 
+     *
      */
 
      public function rooms() : HasMany {

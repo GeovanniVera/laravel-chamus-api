@@ -25,7 +25,7 @@ class StoreMuseumRequest extends FormRequest
             'name' => 'required|string|max:100',
             'opening_time' => 'required',
             'clossing_time' => 'required',
-            'latitude' => 'nullable|numeric',
+            'latitude' => 'numeric',
             'longitude' => 'nullable|numeric',
             'ticket_price' => 'numeric|min:0',
             'url' => 'nullable|url',
