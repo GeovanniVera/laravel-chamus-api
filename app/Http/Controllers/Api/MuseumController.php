@@ -17,7 +17,7 @@ class MuseumController extends Controller implements HasMiddleware
 
     public static function middleware()
     {
-       return [
+        return [
             new Middleware('auth:sanctum', except: ['index', 'show']),
 
         ];
@@ -25,13 +25,13 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $museums = Museum::with('rooms')->get();
+        $museums = Museum::with(['categories', 'discounts', 'rooms'])->get();
         return response()->json(MuseumResource::collection($museums), 200);
     }
 
     public function show(Museum $museum)
     {
-         $museum->load('rooms');
+        $museum->load(['rooms', 'categories', 'discounts']); // Carga todas las relaciones deseadas
         return response()->json(MuseumResource::make($museum), 200);
     }
 
@@ -39,10 +39,10 @@ class MuseumController extends Controller implements HasMiddleware
     {
 
         $data = $request->validated();
-        if(request()->hasFile('image')){
-            $data['image'] = Storage::disk('public')->put('museums',request()->file('image'));
-        }else{
-            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image' ;
+        if (request()->hasFile('image')) {
+            $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
+        } else {
+            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
         }
         $data['user_id'] = auth('api')->id();
         $museum = Museum::create($data);
@@ -53,14 +53,14 @@ class MuseumController extends Controller implements HasMiddleware
     {
         Gate::authorize('update', $museum);
         $data = $request->validated();
-        if(request()->hasFile('image')){
+        if (request()->hasFile('image')) {
             //Delete the old image if exists
-            if($museum->image){
+            if ($museum->image) {
                 Storage::disk('public')->delete($museum->image);
             }
-            $data['image'] = Storage::disk('public')->put('museums',request()->file('image'));
-        }else{
-            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image' ;
+            $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
+        } else {
+            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
         }
         $museum->update($data);
         return response()->json(MuseumResource::make($museum), 200);

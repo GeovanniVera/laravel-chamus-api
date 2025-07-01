@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DiscountResource;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,9 @@ class DiscountController extends Controller
      */
     public function index()
     {
-        $discounts = Discount::all();
-        return response()->json($discounts, 200);
+        // Carga la relación 'museums'
+        $discounts = Discount::with('museums')->get();
+        return DiscountResource::collection($discounts); // Usa la colección del Resource
     }
 
     /**

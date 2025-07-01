@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryCollection;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements HasMiddleware
 {
+
+    public static function middleware()
+    {
+       return [
+            new Middleware('auth:sanctum', except: ['index', 'show']),
+
+        ];
+    }
+
     public function index(){
         $categories = Category::all();
-        return response()->json($categories,200);
+        return response()->json(new CategoryCollection($categories),200);
     }
 
     public function show(Category $category){

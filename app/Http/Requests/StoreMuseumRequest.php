@@ -33,6 +33,9 @@ class StoreMuseumRequest extends FormRequest
             'number_of_rooms' => 'integer|min:1',
             'status' => 'in:active,inactive',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            // --- Nuevas reglas para categorías ---
+            'category_ids' => 'required|array', // Espera que 'category_ids' sea un array
+            'category_ids.*' => 'exists:categories,id', // Cada ID en el array debe existir en la tabla 'categories'
         ];
     }
 
@@ -52,7 +55,11 @@ class StoreMuseumRequest extends FormRequest
             'description.required' => 'La descripción del museo es obligatoria.',
             'number_of_rooms.integer' => 'El número de salas debe ser un entero.',
             'number_of_rooms.min' => 'El número de salas debe ser al menos 1.',
-            'status.in' => 'El estado debe ser activo o inactivo.'
+            'status.in' => 'El estado debe ser activo o inactivo.',
+            // --- Nuevos mensajes de validación para categorías ---
+            'category_ids.required' => 'Debes seleccionar al menos una categoría para el museo.',
+            'category_ids.array' => 'Las categorías deben enviarse como un arreglo.',
+            'category_ids.*.exists' => 'Una o más categorías seleccionadas no son válidas.',
         ];
     }
 }
