@@ -12,18 +12,16 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
-//class MuseumController extends Controller implements HasMiddleware
-
-class MuseumController extends Controller
+class MuseumController extends Controller implements HasMiddleware
 {
 
-    // public static function middleware()
-    // {
-    //    return [
-    //         new Middleware('auth:sanctum', except: ['index', 'show']),
+    public static function middleware()
+    {
+       return [
+            new Middleware('auth:sanctum', except: ['index', 'show']),
 
-    //     ];
-    // }
+        ];
+    }
 
     public function index()
     {
