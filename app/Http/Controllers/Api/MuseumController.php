@@ -59,7 +59,6 @@ class MuseumController extends Controller implements HasMiddleware
     public function update(UpadateMuseumRequest $request, Museum $museum)
     {
 
-        return $request->all();
 
         Gate::authorize('update', $museum);
         $data = $request->validated();
