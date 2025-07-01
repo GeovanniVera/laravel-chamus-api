@@ -14,12 +14,10 @@ use Illuminate\Support\Facades\Storage;
 
 class MuseumController extends Controller implements HasMiddleware
 {
-
     public static function middleware()
     {
         return [
             new Middleware('auth:sanctum', except: ['index', 'show']),
-
         ];
     }
 
@@ -31,38 +29,63 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function show(Museum $museum)
     {
-        $museum->load(['rooms', 'categories', 'discounts']); // Carga todas las relaciones deseadas
+        $museum->load(['rooms', 'categories', 'discounts']);
         return response()->json(MuseumResource::make($museum), 200);
     }
 
     public function store(StoreMuseumRequest $request)
     {
-
         $data = $request->validated();
+
+        $categoryIds = $data['category_ids'] ?? [];
+        unset($data['category_ids']);
+
         if (request()->hasFile('image')) {
             $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
         } else {
             $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
         }
+
         $data['user_id'] = auth('api')->id();
         $museum = Museum::create($data);
-        return response()->json($museum, 201);
+
+        $museum->categories()->sync($categoryIds);
+
+        $museum->load(['categories', 'discounts', 'rooms']);
+
+        return response()->json(MuseumResource::make($museum), 201);
     }
 
     public function update(UpadateMuseumRequest $request, Museum $museum)
     {
         Gate::authorize('update', $museum);
         $data = $request->validated();
+
+        $categoryIds = null;
+        if (isset($data['category_ids'])) {
+            $categoryIds = $data['category_ids'];
+            unset($data['category_ids']);
+        }
+
         if (request()->hasFile('image')) {
-            //Delete the old image if exists
             if ($museum->image) {
                 Storage::disk('public')->delete($museum->image);
             }
             $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
         } else {
+            // Considera si este es el comportamiento deseado al actualizar sin nueva imagen.
+            // Esto sobrescribirá la imagen existente con la URL por defecto si no se carga una nueva.
             $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
         }
+
         $museum->update($data);
+
+        if ($categoryIds !== null) {
+            $museum->categories()->sync($categoryIds);
+        }
+
+        $museum->load(['categories', 'discounts', 'rooms']);
+
         return response()->json(MuseumResource::make($museum), 200);
     }
 
