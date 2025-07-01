@@ -9,8 +9,11 @@ use App\Http\Requests\StoreMuseumRequest;
 use App\Http\Requests\UpadateMuseumRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class MuseumController extends Controller implements HasMiddleware
 {
@@ -58,37 +61,63 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function update(UpadateMuseumRequest $request, Museum $museum)
     {
-
-
         Gate::authorize('update', $museum);
-        $data = $request->validated();
 
-        $categoryIds = null;
-        if (isset($data['category_ids'])) {
-            $categoryIds = $data['category_ids'];
-            unset($data['category_ids']);
-        }
+        // Inicia una transacción de base de datos
+        DB::beginTransaction();
 
-        if (request()->hasFile('image')) {
-            if ($museum->image) {
-                Storage::disk('public')->delete($museum->image);
+        try {
+            $data = $request->validated();
+
+            $categoryIds = null;
+            if (isset($data['category_ids'])) {
+                $categoryIds = $data['category_ids'];
+                unset($data['category_ids']);
             }
-            $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
-        } else {
-            // Considera si este es el comportamiento deseado al actualizar sin nueva imagen.
-            // Esto sobrescribirá la imagen existente con la URL por defecto si no se carga una nueva.
-            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
+
+            // Lógica de manejo de imagen
+            if ($request->hasFile('image')) {
+                if ($museum->image && !str_starts_with($museum->image, 'https://www.publicdomainpictures.net/')) {
+                    Storage::disk('public')->delete($museum->image);
+                }
+                $data['image'] = Storage::disk('public')->put('museums', $request->file('image'));
+            } elseif (isset($data['image']) && $data['image'] === null) {
+                if ($museum->image && !str_starts_with($museum->image, 'https://www.publicdomainpictures.net/')) {
+                    Storage::disk('public')->delete($museum->image);
+                }
+                $data['image'] = null;
+            } else {
+                unset($data['image']);
+            }
+
+            // Intenta actualizar el modelo principal
+            $museum->update($data);
+
+            // Intenta sincronizar las categorías
+            if ($categoryIds !== null) {
+                $museum->categories()->sync($categoryIds);
+            }
+
+            // Si todo fue bien, confirma la transacción
+            DB::commit();
+
+            // Carga las relaciones y devuelve la respuesta exitosa
+            $museum->load(['categories', 'discounts', 'rooms']);
+            return response()->json(MuseumResource::make($museum), 200);
+
+        } catch (Throwable $e) { // Captura cualquier tipo de excepción
+            // Si algo falla, revierte la transacción
+            DB::rollBack();
+
+            // Loggea el error para depuración
+            Log::error('Error al actualizar el museo: ' . $e->getMessage(), ['museum_id' => $museum->id, 'trace' => $e->getTraceAsString()]);
+
+            // Retorna una respuesta de error al cliente
+            return response()->json([
+                'message' => 'Hubo un error al actualizar el museo.',
+                'error' => $e->getMessage() // Para depuración, en producción podrías omitir e.getMessage()
+            ], 500); // Código de estado 500 para error interno del servidor
         }
-
-        $museum->update($data);
-
-        if ($categoryIds !== null) {
-            $museum->categories()->sync($categoryIds);
-        }
-
-        $museum->load(['categories', 'discounts', 'rooms']);
-
-        return response()->json(MuseumResource::make($museum), 200);
     }
 
     public function destroy(Museum $museum)
