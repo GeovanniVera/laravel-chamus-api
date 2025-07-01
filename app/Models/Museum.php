@@ -51,4 +51,13 @@ class Museum extends Model
         return $this->belongsTo(User::class);
      }
 
+     public function discounts(){
+        return $this->belongsToMany(Discount::class, 'discount_museum', 'museum_id', 'discount_id')
+                    ->withPivot('description');
+     }
+
+     public function categories(){
+        return $this->belongsToMany(Category::class, 'category_museum', 'museum_id', 'category_id');
+     }
+
 }
