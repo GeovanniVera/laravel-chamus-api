@@ -59,7 +59,6 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function update(UpadateMuseumRequest $request, Museum $museum)
     {
-        Gate::authorize('update', $museum);
 
         // Inicia una transacción de base de datos
         DB::beginTransaction();
@@ -120,7 +119,6 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function destroy(Museum $museum)
     {
-        Gate::authorize('delete', $museum);
         $museum->delete();
         return response()->json(null, 204);
     }

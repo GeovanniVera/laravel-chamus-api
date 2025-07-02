@@ -13,7 +13,7 @@ class MuseumPolicy
      */
     public function update(User $user, Museum $museum): bool
     {
-        return $user->id === $museum->user_id;
+        return false;
     }
 
     /**
@@ -21,6 +21,6 @@ class MuseumPolicy
      */
     public function delete(User $user, Museum $museum): bool
     {
-        return $user->id === $museum->user_id;
+        return false;
     }
 }
