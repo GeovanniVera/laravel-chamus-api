@@ -22,7 +22,7 @@ class Museum extends Model
         'description',
         'ticket_price',
         'url',
-        'numbrer_of_rooms',
+        'number_of_rooms',
         'status'
     ];
 

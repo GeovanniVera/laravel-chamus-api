@@ -39,6 +39,7 @@ class MuseumController extends Controller implements HasMiddleware
     public function store(StoreMuseumRequest $request)
     {
         $data = $request->validated();
+        Log::debug($data);
 
         $categoryIds = $data['category_ids'] ?? [];
         unset($data['category_ids']);
@@ -51,11 +52,8 @@ class MuseumController extends Controller implements HasMiddleware
 
         $data['user_id'] = auth('api')->id();
         $museum = Museum::create($data);
-
         $museum->categories()->sync($categoryIds);
-
         $museum->load(['categories', 'discounts', 'rooms']);
-
         return response()->json(MuseumResource::make($museum), 201);
     }
 

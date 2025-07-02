@@ -32,7 +32,7 @@ class StoreMuseumRequest extends FormRequest
             'description' => 'required|string',
             'number_of_rooms' => 'integer|min:1',
             'status' => 'in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
             // --- Nuevas reglas para categorías ---
             'category_ids' => 'required|array', // Espera que 'category_ids' sea un array
             'category_ids.*' => 'exists:categories,id', // Cada ID en el array debe existir en la tabla 'categories'

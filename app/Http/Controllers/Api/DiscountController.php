@@ -5,23 +5,20 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DiscountResource;
 use App\Models\Discount;
+use App\Models\Museum;
 use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        // Carga la relación 'museums'
-        $discounts = Discount::with('museums')->get();
-        return DiscountResource::collection($discounts); // Usa la colección del Resource
+        $discounts = Discount::with(['museums' => function ($query) {
+            $query->withPivot('description'); // Make sure 'description' is your pivot column
+        }])->get();
+        return DiscountResource::collection($discounts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -58,7 +55,10 @@ class DiscountController extends Controller
      */
     public function show(Discount $discount)
     {
-        return response()->json($discount, 200);
+        $discount->load(['museums' => function ($query) {
+            $query->withPivot('description'); // Make sure 'description' is the actual column name in your pivot table
+        }]);
+        return response()->json(new DiscountResource($discount), 200);
     }
 
     /**

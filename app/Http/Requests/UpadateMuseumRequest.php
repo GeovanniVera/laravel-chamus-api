@@ -27,7 +27,7 @@ class UpadateMuseumRequest extends FormRequest
             'description' => 'sometimes|string', // Changed to sometimes
             'number_of_rooms' => 'sometimes|integer|min:1', // Changed to sometimes
             'status' => 'sometimes|in:active,inactive', // Changed to sometimes
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Added image validation back
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048', // Added image validation back
             'category_ids' => 'sometimes|array', // Added for categories
             'category_ids.*' => 'exists:categories,id', // Added for categories
         ];

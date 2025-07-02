@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryCollection;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\Middleware;
@@ -35,7 +36,7 @@ class CategoryController extends Controller implements HasMiddleware
         ]);
 
         $category = Category::create($data);
-        return response()->json($category,201);
+        return response()->json(new CategoryResource($category),201);
     }
 
     public function update(Request $request, Category $category){
@@ -48,6 +49,6 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function destroy(Category $category){
         $category->delete();
-        return response()->json(null,404);
+        return response()->json(null,204);
     }
 }
