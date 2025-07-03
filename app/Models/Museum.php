@@ -22,7 +22,6 @@ class Museum extends Model
         'description',
         'ticket_price',
         'url',
-        'number_of_rooms',
         'status'
     ];
 
@@ -31,7 +30,6 @@ class Museum extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'ticket_price' => 'float',
-        'number_of_rooms' => 'integer',
     ];
 
     /**

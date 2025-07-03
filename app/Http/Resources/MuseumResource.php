@@ -16,21 +16,40 @@ class MuseumResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $defaultImageUrl = asset('img/image-not-found.svg'); 
+        $imageUrl = $defaultImageUrl; 
+
+
+        if (!empty($this->image)) {
+            if (Storage::exists($this->image)) {
+                $imageUrl = Storage::url($this->image);
+            }
+        }
+
+
         return [
             'id' => $this->id,
             'nombre' => $this->name,
-            'imagen' => Storage::url($this->image),
+            'imagen' => $imageUrl,
             'hora_de_apertura' => $this->opening_time,
             'hora_de_cierre' => $this->clossing_time,
             'latitud' => $this->latitude,
             'longitud' => $this->longitude,
-            'descripcion' => $this->description, // Descripción del museo
+            'descripcion' => $this->description, 
             'precio' => $this->ticket_price,
             'url' => $this->url,
-            'numero_de_salas' => $this->number_of_rooms,
+            'numero_de_salas' => $this->rooms->count(),
             'estado' => $this->status,
             'creado' => $this->created_at,
             'actualizado' => $this->updated_at,
+            'usuario_creador' => $this->whenLoaded('user', function(){
+                return [
+                    'id' => $this->user->id,
+                    'nombre' => $this->user->name,
+                    'email' => $this->user->email
+                ];
+            }),
             'rooms' => RoomResource::collection($this->whenLoaded('rooms')),
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             // Recupera los descuentos y sus datos de la tabla pivote

@@ -8,17 +8,27 @@ use Illuminate\Support\Facades\Storage;
 
 class RoomResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    
+
+    
     public function toArray(Request $request): array
     {
+
+        $defaultImageUrl = asset('img/image-not-found.svg'); 
+        $imageUrl = $defaultImageUrl; 
+
+
+        if (!empty($this->image)) {
+            if (Storage::exists($this->image)) {
+                $imageUrl = Storage::url($this->image);
+            }
+        }
+
+
         return [
             'id' => $this->id,
             'nombre' => $this->name,
-            'imagen' => Storage::url($this->image),
+            'imagen' => $imageUrl,
             'descripcion' => $this->description,
             'creado' => $this->created_at,
             'actualizado' => $this->updated_at,

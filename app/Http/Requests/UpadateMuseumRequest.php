@@ -25,7 +25,6 @@ class UpadateMuseumRequest extends FormRequest
             'ticket_price' => 'sometimes|numeric|min:0', // Changed to sometimes
             'url' => 'nullable|url', // 'nullable' can remain, but 'sometimes' might also be useful
             'description' => 'sometimes|string', // Changed to sometimes
-            'number_of_rooms' => 'sometimes|integer|min:1', // Changed to sometimes
             'status' => 'sometimes|in:active,inactive', // Changed to sometimes
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048', // Added image validation back
             'category_ids' => 'sometimes|array', // Added for categories

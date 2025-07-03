@@ -30,7 +30,6 @@ class StoreMuseumRequest extends FormRequest
             'ticket_price' => 'numeric|min:0',
             'url' => 'nullable|url',
             'description' => 'required|string',
-            'number_of_rooms' => 'integer|min:1',
             'status' => 'in:active,inactive',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
             // --- Nuevas reglas para categorías ---
