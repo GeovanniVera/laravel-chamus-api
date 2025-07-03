@@ -22,7 +22,7 @@ class StoreMuseumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:10|exists:museums,name',
+            'name' => 'required|string|exists:museums,name',
             'opening_time' => 'required',
             'clossing_time' => 'required',
             'latitude' => 'nullable|numeric',
