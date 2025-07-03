@@ -119,6 +119,9 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function destroy(Museum $museum)
     {
+        if(Storage::exists($museum->image)) {
+            Storage::delete($museum->image);
+        }
         $museum->delete();
         return response()->json(null, 204);
     }

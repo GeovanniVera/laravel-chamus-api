@@ -22,10 +22,10 @@ class StoreMuseumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:10|exists:museums,name',
             'opening_time' => 'required',
             'clossing_time' => 'required',
-            'latitude' => 'numeric',
+            'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'ticket_price' => 'numeric|min:0',
             'url' => 'nullable|url',
@@ -44,6 +44,7 @@ class StoreMuseumRequest extends FormRequest
     {
         return [
             'name.required' => 'El nombre del museo es obligatorio.',
+            'name.exists' => 'El museo ya esta registrado.',
             'opening_time.required' => 'La hora de apertura es obligatoria.',
             'clossing_time.required' => 'La hora de cierre es obligatoria.',
             'latitude.numeric' => 'La latitud debe ser un número.',
