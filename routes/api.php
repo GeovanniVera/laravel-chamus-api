@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MuseumController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CotizacionGrupalController;
 use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\UserController;
 use App\Models\Discount;
@@ -23,3 +24,6 @@ Route::apiResource('museums', MuseumController::class);
 Route::apiResource('categories',CategoryController::class);
 Route::apiResource('discounts',DiscountController::class);
 Route::apiResource('users', UserController::class);
+Route::get('/cotizaciones/{unique_id}', [CotizacionGrupalController::class,'show']);
+Route::post('/cotizaciones', [CotizacionGrupalController::class,'store']);
+
