@@ -89,6 +89,9 @@ class RoomController extends Controller implements HasMiddleware
      */
     public function destroy(Room $room)
     {
+        if(Storage::exists($room->image)) {
+            Storage::delete($room->image);
+        }
         $room->delete();
         return response()->json(null, 204);
     }

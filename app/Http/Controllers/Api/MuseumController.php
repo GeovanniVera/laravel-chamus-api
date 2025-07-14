@@ -47,7 +47,7 @@ class MuseumController extends Controller implements HasMiddleware
         if (request()->hasFile('image')) {
             $data['image'] = Storage::disk('public')->put('museums', request()->file('image'));
         } else {
-            $data['image'] = 'https://www.publicdomainpictures.net/view-image.php?image=270609&picture=not-found-image';
+            $data['image'] = 'not-found-image.jpg';
         }
 
         $data['user_id'] = auth('api')->id();
@@ -119,6 +119,9 @@ class MuseumController extends Controller implements HasMiddleware
 
     public function destroy(Museum $museum)
     {
+        if(Storage::exists($museum->image)) {
+            Storage::delete($museum->image);
+        }
         $museum->delete();
         return response()->json(null, 204);
     }
