@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CotizacionGrupalController;
 use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\UserController;
+use App\Models\CotizacionGrupal;
 use App\Models\Discount;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -25,5 +26,6 @@ Route::apiResource('categories',CategoryController::class);
 Route::apiResource('discounts',DiscountController::class);
 Route::apiResource('users', UserController::class);
 Route::get('/cotizaciones/{unique_id}', [CotizacionGrupalController::class,'show']);
+Route::get('/cotizaciones',[CotizacionGrupalController::class, 'index']);
 Route::post('/cotizaciones', [CotizacionGrupalController::class,'store']);
 

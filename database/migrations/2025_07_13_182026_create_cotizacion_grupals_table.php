@@ -7,15 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {public function up()
     {
-        Schema::create('cotizacion_grupals', function (Blueprint $table) {
+         Schema::create('cotizacion_grupals', function (Blueprint $table) {
             $table->id();
             $table->string('unique_id')->unique();
             $table->foreignId('museum_id')->constrained()->onDelete('cascade');
+            $table->date('appointment_date'); // Eliminado 'after'
             $table->time('start_hour');
             $table->time('end_hour');
             $table->integer('total_people');
             $table->integer('total_people_discount');
             $table->integer('total_people_whitout_discount');
+            $table->integer('total_infants')->default(0); // Eliminado 'after'
             $table->decimal('total_whit_discount', 8, 2);
             $table->decimal('total_whitout_discount', 8, 2);
             $table->decimal('price_total', 8, 2);
