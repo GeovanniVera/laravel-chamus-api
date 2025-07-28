@@ -76,6 +76,6 @@ class CotizacionGrupalController extends Controller
     }
 
     public function index(){
-        return CotizacionGrupal::all();
+        return CotizacionGrupal::with('museum')->get();
     }
 }
